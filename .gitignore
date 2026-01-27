@@ -1,0 +1,52 @@
+# ===== 通用编译产物 =====
+*.o
+*.obj
+*.a
+*.lib
+*.elf
+*.axf
+*.out
+*.map
+*.lst
+*.d
+*.dep
+*.hex
+*.bin
+*.dfu
+
+# ===== 你的工程里：Keil/构建输出目录（按 tree 定位）=====
+Examples/**/Objects/
+Examples/**/Listings/
+Examples/**/DebugConfig/
+
+# Keil 也常见这些目录（若未来出现也忽略）
+Objects/
+Listings/
+Debug/
+Release/
+build/
+Build/
+output/
+out/
+
+# ===== Keil 工程用户本机配置/临时 =====
+*.uvoptx
+*.uvopt
+*.uvguix.*
+*.uvgui.*
+
+# ===== CMSIS-Pack / RTE（强烈建议不入库，避免设备包差异）=====
+Examples/**/RTE/
+
+# ===== VS Code 本机配置（可选：只保留可移植配置）=====
+
+# ===== Windows 杂项 =====
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ===== 日志 =====
+*.log
+JLinkLog.txt
+openocd*.log
