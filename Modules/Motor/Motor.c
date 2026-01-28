@@ -8,6 +8,9 @@
 #define MOTOR_AIN2_PIN GPIO_Pin_14
 #define MOTOR_AIN_CLK_FUNCTION() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD,ENABLE);
 
+//注意,直流电机不要大幅度改变方向,否则迅速发热且无法突破扭矩(也可能是电机本身质量问题)
+//电压尽量高一点,5V很勉强
+//占空比频率不能太低,否则会有明显的噪音
 
 static void Motor_coast_stop(void)
 {
