@@ -1,8 +1,8 @@
 #include "stm32f10x.h"
 
-#define LED_PORT GPIOB
-#define LED_PIN GPIO_Pin_6
-#define LED_CLK_FUNCTION() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+#define LED_PORT GPIOE
+#define LED_PIN GPIO_Pin_5
+#define LED_CLK_FUNCTION() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE,ENABLE);
 
 //#define LED_ACTIVE_HIGH 1
 

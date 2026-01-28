@@ -54,7 +54,7 @@ void TIM_IT_FUNCTION(void)
 {
 	if(TIM_GetITStatus(TIM_PORT,TIM_IT_Update) == SET)
 	{
-		Send_printf("tim interrupt!");
+		//Send_printf("tim interrupt!");
 		TIM_ClearITPendingBit(TIM_PORT,TIM_IT_Update); //清除中断
 	}
 }

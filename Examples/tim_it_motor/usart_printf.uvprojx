@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_HD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS\CM3\CoreSupport;..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\..\Common;..\usart_printf;..\..\Modules\Usart;..\..\Modules\Delay;..\..\Modules\TIM;..\..\Modules\Buzzer;..\..\Modules\LED</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS\CM3\CoreSupport;..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\..\Common;..\usart_printf;..\..\Modules\Usart;..\..\Modules\Delay;..\..\Modules\TIM;..\..\Modules\Buzzer;..\..\Modules\LED;..\..\Modules\PWM;..\..\Modules\Motor</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -613,6 +613,26 @@
               <FileName>Buzzer.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Modules\Buzzer\Buzzer.h</FilePath>
+            </File>
+            <File>
+              <FileName>PWM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\PWM\PWM.c</FilePath>
+            </File>
+            <File>
+              <FileName>PWM.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\PWM\PWM.h</FilePath>
+            </File>
+            <File>
+              <FileName>Motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\Motor\Motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>Motor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\Motor\Motor.h</FilePath>
             </File>
           </Files>
         </Group>

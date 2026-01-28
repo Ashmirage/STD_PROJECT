@@ -91,9 +91,12 @@
 
 #include "my_usart.h"
 #include "Delay.h"
-#include "TIM_IT.h"
+//#include "TIM_IT.h"
 #include "LED.h"
-#include "Buzzer.h"
+//#include "Buzzer.h"
+//#include "PWM.h"
+#include "Motor.h"
+
 int main(void)
 {
   /*!< At this stage the microcontroller clock setting is already configured, 
@@ -136,28 +139,42 @@ int main(void)
 
   /* Infinite loop */
   My_usart_init(115200);
-  TIM_it_init();
+  //TIM_it_init();
   LED_init();
+  //PWM_init();
   //Buzzer_init();
-  LED_ON();
+  //LED_ON();
+  Motor_init();
+  int8_t speed = 0;
   while (1)
   {
+	if(speed >= 100)
+	{
+		speed = 100;
+	}
+	if(speed <= -100)
+	{
+		speed = -100;
+	}
 	if(Serial_RxFlag == 1)
 	{
 		if(strcmp(Serial_RxPacket,"1") == 0)
 		{
-			LED_ON();
+			speed+=5;
+			Motor_set_speed(speed);
 		}
 		else if(strcmp(Serial_RxPacket,"0") == 0)
 		{
-			LED_OFF();
+			speed-=5;
+			Motor_set_speed(speed);
 		}
 		else if(strcmp(Serial_RxPacket,"2") == 0)
 		{
-			LED_Toggle();
+			
 		}
 		Serial_RxFlag = 0;
 	}
+	Send_printf("speed=%d,ccr=%d\r\n",speed,TIM_GetCapture2(TIM2));
   }
 }
 
