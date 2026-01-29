@@ -23,7 +23,10 @@
 #include "stm32f10x.h"
 #include <stdio.h>
 #include <string.h>
-#include "DHT11.h"
+#include "my_usart.h"
+#include "Delay.h"
+#include "LDR.h"
+#include "AD.h"
 
 #ifdef USE_STM32100B_EVAL
  #include "stm32100b_eval_lcd.h"
@@ -90,8 +93,7 @@
   * @retval None
   */
 
-#include "my_usart.h"
-#include "Delay.h"
+
 int main(void)
 {
   /*!< At this stage the microcontroller clock setting is already configured, 
@@ -134,29 +136,11 @@ int main(void)
 
   /* Infinite loop */
   My_usart_init(115200);
-  DHT11_Init();
-  Send_printf("hello\r\n");
-  if(DTH11_check() == 1)
-  {
-	Send_printf("dth11 init ok!\r\n");
-  }
-  else
-  {
-	Send_printf("dth11 init failed!\r\n");
-  }
-  
+  LDR_Init();
   while (1)
   {
-	  Delay_s(2);
-	  struct DHT11_data dht11_data;
-	  dht11_data = DHT11_read_data();
-	  if(dht11_data.status == DHT11_DATA_OK)
-	  {
-		  Send_printf("hum:%d,tem=%d\r\n",dht11_data.humidity,dht11_data.temperature);
-	  }
-	  else{
-		Send_printf("hum:err,tem=err,status=%d\r\n",dht11_data.status);
-	  }
+	  Send_printf("adc=%d,lux=%d\r\n",AD_Value[0],LDR_LuxData());
+	  Delay_ms(200);
 //	  if(Serial_RxFlag == 1)
 //	  {
 //		if(strcmp(Serial_RxPacket,"LED_ON") == 0)
