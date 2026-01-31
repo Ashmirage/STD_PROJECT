@@ -628,23 +628,23 @@ void LCD_Init(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOD|RCC_APB2Periph_GPIOE|RCC_APB2Periph_GPIOF|RCC_APB2Periph_GPIOG,ENABLE);//使能PORTB,D,E,F,G以及AFIO复用功能时钟
 
  
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;				 // 推挽输出 高电平  tft复位 改为->PE2
- 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
- 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
- 	GPIO_Init(GPIOE, &GPIO_InitStructure);	
-	//复位
-	Delay_ms(100);
-	GPIO_ResetBits(GPIOE,GPIO_Pin_2);  //输出低
-	Delay_ms(100);
-	GPIO_SetBits(GPIOE,GPIO_Pin_2);  //输出高
-	Delay_ms(100);
+//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;				 // 推挽输出 高电平  tft复位 改为->PE2
+// 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
+// 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+// 	GPIO_Init(GPIOE, &GPIO_InitStructure);	
+//	//复位
+//	Delay_ms(100);
+//	GPIO_ResetBits(GPIOE,GPIO_Pin_2);  //输出低
+//	Delay_ms(100);
+//	GPIO_SetBits(GPIOE,GPIO_Pin_2);  //输出高
+//	Delay_ms(100);
 	
 	
- 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;				 //PB0 推挽输出 背光  --->PB15
+ 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;				 //PB0 推挽输出 背光  --->PB15
  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
  	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
  	GPIO_Init(GPIOB, &GPIO_InitStructure);
-	GPIO_SetBits(GPIOB,GPIO_Pin_15);  //输出高
+	GPIO_SetBits(GPIOB,GPIO_Pin_0);  //输出高
 	
 	
 	
