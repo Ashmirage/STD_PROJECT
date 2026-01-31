@@ -617,7 +617,7 @@ void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height)
 //初始化lcd
 //该初始化函数可以初始化各种ILI93XX液晶,但是其他函数是基于ILI9320的!!!
 //在其他型号的驱动芯片上没有测试! 
-void LCD_Init(void)
+void LCD_Init(uint8_t dir)
 { 										  
 		GPIO_InitTypeDef GPIO_InitStructure;
 	FSMC_NORSRAMInitTypeDef  FSMC_NORSRAMInitStructure;
@@ -2746,7 +2746,7 @@ void LCD_Init(void)
 		LCD_SSD_BackLightSet(100);//背光设置为最亮
 	}
 	
-	LCD_Display_Dir(1);		//默认为竖屏  设置为横屏
+	LCD_Display_Dir(dir);		//默认为竖屏  设置为横屏
 
 	LCD_Clear(WHITE);
 	

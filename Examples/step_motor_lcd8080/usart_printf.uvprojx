@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_HD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS\CM3\CoreSupport;..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\..\Common;..\usart_printf;..\..\Modules\Usart;..\..\Modules\Delay;..\..\Modules\Stepmotor;..\..\Modules\TFT_LCD</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS\CM3\CoreSupport;..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\..\Common;..\usart_printf;..\..\Modules\Usart;..\..\Modules\Delay;..\..\Modules\Stepmotor;..\..\Modules\TFT_LCD;..\..\Modules\Relay;..\..\Modules\AD;..\..\Modules\TPR</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -603,6 +603,36 @@
               <FileName>Lcd.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Modules\TFT_LCD\Lcd.h</FilePath>
+            </File>
+            <File>
+              <FileName>Relay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\Relay\Relay.c</FilePath>
+            </File>
+            <File>
+              <FileName>Relay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\Relay\Relay.h</FilePath>
+            </File>
+            <File>
+              <FileName>AD.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\AD\AD.c</FilePath>
+            </File>
+            <File>
+              <FileName>AD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\AD\AD.h</FilePath>
+            </File>
+            <File>
+              <FileName>Temp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\TPR\Temp.c</FilePath>
+            </File>
+            <File>
+              <FileName>Temp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\TPR\Temp.h</FilePath>
             </File>
           </Files>
         </Group>

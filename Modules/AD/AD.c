@@ -1,9 +1,9 @@
 #include "stm32f10x.h"
    
 #define ADC_GPIO_CLK_FUNCTION() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-#define ADC_CHANNEL1_PORT GPIOA
-#define ADC_CHANNEL1_PIN  GPIO_Pin_1
-#define ADC_CHANNEL1_NAME ADC_Channel_1
+#define ADC_CHANNEL1_PORT GPIOC
+#define ADC_CHANNEL1_PIN  GPIO_Pin_0
+#define ADC_CHANNEL1_NAME ADC_Channel_10
 #define ADC_CHANNEL_NUM 1
 #define DMA_CHANNEL_NUM 1
 
