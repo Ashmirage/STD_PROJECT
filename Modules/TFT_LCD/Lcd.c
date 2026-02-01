@@ -1,7 +1,7 @@
 #include "Lcd.h"
 #include "stdlib.h"
 #include "font.h"  
-#include "Delay.h"	
+#include "time.h"	
 #include "my_usart.h"
 //////////////////////////////////////////////////////////////////////////////////	 
 
