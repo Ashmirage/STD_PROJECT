@@ -24,6 +24,9 @@ uint8_t DTH11_check(void);
 //读取数据函数
 struct DHT11_data DHT11_read_data(void);
 
+// 任务调度器里面1s执行一次
+void DHT11_update_data(void);
 
+struct DHT11_data DHT11_getdata(void);
 
 #endif //DHT11_H

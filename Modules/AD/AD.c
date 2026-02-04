@@ -1,9 +1,17 @@
 #include "stm32f10x.h"
    
-#define ADC_GPIO_CLK_FUNCTION() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+#define ADC_GPIO_CLK_FUNCTION() \
+do{ \
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE); \
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOF, ENABLE); \
+}while(0);
+
 #define ADC_CHANNEL1_PORT GPIOC
-#define ADC_CHANNEL1_PIN  GPIO_Pin_0
-#define ADC_CHANNEL1_NAME ADC_Channel_10
+#define ADC_CHANNEL1_PIN  GPIO_Pin_5
+#define ADC_CHANNEL1_NAME ADC_Channel_15
+#define ADC_CHANNEL2_PORT GPIOF
+#define ADC_CHANNEL2_PIN  GPIO_Pin_6
+#define ADC_CHANNEL2_NAME ADC_Channel_4
 #define ADC_CHANNEL_NUM 1
 #define DMA_CHANNEL_NUM 1
 
@@ -23,6 +31,7 @@ void AD_init(void)
 {
 	/*开启时钟*/
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);	//开启ADC1的时钟
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC3, ENABLE);	//开启ADC3的时钟
 	ADC_GPIO_CLK_FUNCTION();	
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);		//开启DMA1的时钟
 	
@@ -34,13 +43,18 @@ void AD_init(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
 	GPIO_InitStructure.GPIO_Pin = ADC_CHANNEL1_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(ADC_CHANNEL1_PORT, &GPIO_InitStructure);					
+	GPIO_Init(ADC_CHANNEL1_PORT, &GPIO_InitStructure);	 //ADC1的IO口初始化
+	
+	GPIO_InitStructure.GPIO_Pin = ADC_CHANNEL2_PIN;
+	GPIO_Init(ADC_CHANNEL2_PORT, &GPIO_InitStructure);	//ADC3的IO口初始化
 	
 	/*规则组通道配置*/
 	ADC_RegularChannelConfig(ADC1, ADC_CHANNEL1_NAME, 1, ADC_SampleTime_71Cycles5);	//规则组序列1的位置，配置为通道0
 //	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 2, ADC_SampleTime_55Cycles5);	//规则组序列2的位置，配置为通道1
 //	ADC_RegularChannelConfig(ADC1, ADC_Channel_2, 3, ADC_SampleTime_55Cycles5);	//规则组序列3的位置，配置为通道2
 //	ADC_RegularChannelConfig(ADC1, ADC_Channel_3, 4, ADC_SampleTime_55Cycles5);	//规则组序列4的位置，配置为通道3
+	
+	ADC_RegularChannelConfig(ADC3, ADC_CHANNEL2_NAME, 1, ADC_SampleTime_71Cycles5);	
 	
 	/*ADC初始化*/
 	ADC_InitTypeDef ADC_InitStructure;											//定义结构体变量
@@ -51,6 +65,8 @@ void AD_init(void)
 	ADC_InitStructure.ADC_ScanConvMode = DISABLE;								//扫描模式，使能，扫描规则组的序列，扫描数量由ADC_NbrOfChannel确定
 	ADC_InitStructure.ADC_NbrOfChannel = ADC_CHANNEL_NUM;										//通道数，为4，扫描规则组的前4个通道
 	ADC_Init(ADC1, &ADC_InitStructure);											//将结构体变量交给ADC_Init，配置ADC1
+	ADC_Init(ADC3, &ADC_InitStructure);											//将结构体变量交给ADC_Init，配置ADC3
+	
 	
 	/*DMA初始化*/
 	DMA_InitTypeDef DMA_InitStructure;											//定义结构体变量
@@ -72,14 +88,22 @@ void AD_init(void)
 	ADC_DMACmd(ADC1, ENABLE);								//ADC1触发DMA1的信号使能
 	ADC_Cmd(ADC1, ENABLE);									//ADC1使能
 	
+	ADC_Cmd(ADC3, ENABLE);									//ADC3使能
 	/*ADC校准*/
 	ADC_ResetCalibration(ADC1);								//固定流程，内部有电路会自动执行校准
 	while (ADC_GetResetCalibrationStatus(ADC1) == SET);
 	ADC_StartCalibration(ADC1);
 	while (ADC_GetCalibrationStatus(ADC1) == SET);
 	
+	ADC_ResetCalibration(ADC3);								//固定流程，内部有电路会自动执行校准
+	while (ADC_GetResetCalibrationStatus(ADC3) == SET);
+	ADC_StartCalibration(ADC3);
+	while (ADC_GetCalibrationStatus(ADC3) == SET);
+	
 	/*ADC触发*/
 	ADC_SoftwareStartConvCmd(ADC1, ENABLE);	//软件触发ADC开始工作，由于ADC处于连续转换模式，故触发一次后ADC就可以一直连续不断地工作
+	
+	ADC_SoftwareStartConvCmd(ADC3, ENABLE);
 }
 
 

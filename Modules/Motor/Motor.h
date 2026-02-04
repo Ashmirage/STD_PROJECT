@@ -24,7 +24,8 @@ void Motor_init(void);
 void Motor_set_speed(int8_t speed);
 
 
-
+// 获取直流电机的状态
+uint8_t Motor_get_status(void);
 
 
 

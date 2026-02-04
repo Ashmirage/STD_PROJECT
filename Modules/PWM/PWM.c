@@ -1,13 +1,13 @@
 #include "stm32f10x.h"
 
 
-#define PWM_TIM_PORT TIM2
-#define PWM_OC_INIT_FUNCTION TIM_OC2Init
-#define PWM_GPIO_PORT GPIOA
+#define PWM_TIM_PORT TIM3
+#define PWM_OC_INIT_FUNCTION TIM_OC4Init
+#define PWM_GPIO_PORT GPIOB
 #define PWM_GPIO_PIN GPIO_Pin_1
-#define PWM_TIM_CLK_INIT_FUNCTION() RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
-#define PWM_GPIO_CLK_INIT_FUNCTION() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
-#define PWM_SET_FUNCTION TIM_SetCompare2
+#define PWM_TIM_CLK_INIT_FUNCTION() RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
+#define PWM_GPIO_CLK_INIT_FUNCTION() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+#define PWM_SET_FUNCTION TIM_SetCompare4
 
 /**
  * @brief  PWM输出初始化,默认输出频率20khz,占空比范围0-100

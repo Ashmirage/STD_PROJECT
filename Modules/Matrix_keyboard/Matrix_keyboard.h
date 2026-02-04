@@ -5,9 +5,8 @@
 
 void Matrix_keyboard_init(void);
 
-uint8_t Matrix_get_number(void);
 
-
+uint8_t Matrix_keyboard_get_number(void);
 
 
 #endif

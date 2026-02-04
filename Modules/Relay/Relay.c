@@ -1,8 +1,8 @@
 #include "stm32f10x.h"
 
-#define RELAY_GPIO_CLK_FUNCTION()   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
-#define RELAY_GPIO_PORT GPIOA
-#define RELAY_GPIO_PIN GPIO_Pin_5
+#define RELAY_GPIO_CLK_FUNCTION()   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
+#define RELAY_GPIO_PORT GPIOC
+#define RELAY_GPIO_PIN GPIO_Pin_4
 
 void Relay_init(void)
 {

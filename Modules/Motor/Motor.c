@@ -1,16 +1,25 @@
 #include "stm32f10x.h"
 #include <stdlib.h>
 #include "PWM.h"
-#include "Delay.h"
+#include "time.h"
 
-#define MOTOR_AIN_PORT GPIOD
+#define MOTOR_AIN_PORT GPIOC
 #define MOTOR_AIN1_PIN GPIO_Pin_13
-#define MOTOR_AIN2_PIN GPIO_Pin_14
-#define MOTOR_AIN_CLK_FUNCTION() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD,ENABLE);
+#define MOTOR_AIN2_PIN GPIO_Pin_7
+#define MOTOR_AIN_CLK_FUNCTION() RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
 
 //注意,直流电机不要大幅度改变方向,否则迅速发热且无法突破扭矩(也可能是电机本身质量问题)
 //电压尽量高一点,5V很勉强
 //占空比频率不能太低,否则会有明显的噪音
+
+
+static uint8_t motor_status = 0;
+
+// 获取直流电机的状态
+uint8_t Motor_get_status(void)
+{
+	return motor_status;
+}
 
 static void Motor_coast_stop(void)
 {
@@ -18,6 +27,7 @@ static void Motor_coast_stop(void)
     PWM_set(0);
     GPIO_WriteBit(MOTOR_AIN_PORT, MOTOR_AIN1_PIN, Bit_RESET);
     GPIO_WriteBit(MOTOR_AIN_PORT, MOTOR_AIN2_PIN, Bit_RESET); // IN1=0 IN2=0 => 停止(滑行)
+	motor_status = 0;
 }
 
 /**
@@ -78,7 +88,6 @@ void Motor_set_speed(int8_t speed)
     if (last_dir != 0 && dir != last_dir)
     {
         Motor_coast_stop();
-        Delay_ms(10);                         // 可根据电机惯性调到 5~50ms
     }
 
     // 设置方向
@@ -95,7 +104,7 @@ void Motor_set_speed(int8_t speed)
 
     // 设置PWM（钳位交给PWM_set了）
     PWM_set((uint8_t)abs(speed));
-
+	motor_status = 1;
     last_dir = dir;
 }
 

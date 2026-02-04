@@ -2,16 +2,16 @@
 #include "time.h"
 
 // 定义4个控制IN的IO端口
-#define STEPMOTOR_A_GPIO_PORT GPIOC
-#define STEPMOTOR_B_GPIO_PORT GPIOC
-#define STEPMOTOR_C_GPIO_PORT GPIOC
-#define STEPMOTOR_D_GPIO_PORT GPIOC
+#define STEPMOTOR_A_GPIO_PORT GPIOD
+#define STEPMOTOR_B_GPIO_PORT GPIOD
+#define STEPMOTOR_C_GPIO_PORT GPIOD
+#define STEPMOTOR_D_GPIO_PORT GPIOE
 
 // 定义4个控制IN的IO引脚
-#define STEPMOTOR_A_PIN				    GPIO_Pin_0
-#define STEPMOTOR_B_PIN 				GPIO_Pin_1
-#define STEPMOTOR_C_PIN 				GPIO_Pin_2
-#define STEPMOTOR_D_PIN 				GPIO_Pin_3
+#define STEPMOTOR_A_PIN				    GPIO_Pin_11
+#define STEPMOTOR_B_PIN 				GPIO_Pin_12
+#define STEPMOTOR_C_PIN 				GPIO_Pin_13
+#define STEPMOTOR_D_PIN 				GPIO_Pin_0
 
 #define STEPMOTOR_A_HIGH GPIO_SetBits(STEPMOTOR_A_GPIO_PORT,STEPMOTOR_A_PIN)
 #define STEPMOTOR_A_LOW GPIO_ResetBits(STEPMOTOR_A_GPIO_PORT,STEPMOTOR_A_PIN)
@@ -35,7 +35,8 @@ void (*stepmotor_func[])(uint8_t) = {step_A,step_B,step_C,step_D};
 // 开始端口的时钟,需要修改
 #define STEPMOTOR_GPIO_CLK_FUNCTION() \
 do{ \
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE); \
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD,ENABLE); \
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE,ENABLE); \
 }while(0);
 
 
@@ -83,6 +84,14 @@ typedef struct
 }Stepmotor;
 
 static Stepmotor stepmotor_st;
+
+static float curtain = 0;//窗帘状态
+
+// 获取当前状态
+float Stepmotor_get_curtain_status(void)
+{
+	return curtain;
+}
 
 /**
 * @brief  步进电机停止函数
@@ -181,10 +190,25 @@ void Stepmotor_Rhythm_1ms(void)
 //启动电机的函数
 void Stepmotor_angle_dir(uint8_t dir,u16 angle,uint16_t interval_ms)
 {
+	if(curtain >= 100 && dir == 0)
+	{
+		return;//窗帘运动到极限,不允许继续移动
+	}
+	if(curtain <= 0 && dir == 1)
+	{
+		return;//窗帘运动到极限,不允许继续移动
+	}
 	// 如果忙碌就忽略这个指令
 	if(stepmotor_st.is_busy == 1)
 	{
 		return;
+	}
+	if(dir == 0)
+	{
+		curtain += angle / 90.0 * 25;
+	}else
+	{
+		curtain -= angle / 90.0 * 25;
 	}
 	stepmotor_st.dir = dir; //设置方向
 	stepmotor_st.remain_phrases = 64*angle/45*8; //计算步数

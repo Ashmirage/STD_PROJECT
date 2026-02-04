@@ -1,32 +1,31 @@
 #include "stm32f10x.h"
-#include "Delay.h"
+#include "time.h"
 #include "my_usart.h"
 #include <stdio.h>
 
-#define ROW1_GPIO_PORT GPIOB //row1的端口
-#define ROW2_GPIO_PORT GPIOB //row2的端口
-#define ROW3_GPIO_PORT GPIOB //row3的端口
-#define ROW4_GPIO_PORT GPIOD //row4的端口
-#define ROW1_GPIO_PIN GPIO_Pin_13 //row1的引脚
-#define ROW2_GPIO_PIN GPIO_Pin_14 //row2的引脚
-#define ROW3_GPIO_PIN GPIO_Pin_15 //row3的引脚
-#define ROW4_GPIO_PIN GPIO_Pin_8 //row4的引脚
+#define ROW1_GPIO_PORT GPIOA //row1的端口
+#define ROW2_GPIO_PORT GPIOA //row2的端口
+#define ROW3_GPIO_PORT GPIOA //row3的端口
+#define ROW4_GPIO_PORT GPIOA //row4的端口
+#define ROW1_GPIO_PIN GPIO_Pin_5 //row1的引脚
+#define ROW2_GPIO_PIN GPIO_Pin_6 //row2的引脚
+#define ROW3_GPIO_PIN GPIO_Pin_7 //row3的引脚
+#define ROW4_GPIO_PIN GPIO_Pin_8//row4的引脚
 
-#define COL1_GPIO_PORT GPIOD //col1的端口
-#define COL2_GPIO_PORT GPIOD //col2的端口
-#define COL3_GPIO_PORT GPIOD //col3的端口
-#define COL4_GPIO_PORT GPIOD //col4的端口
-#define COL1_GPIO_PIN GPIO_Pin_9 //col1的引脚
-#define COL2_GPIO_PIN GPIO_Pin_10 //col2的引脚
-#define COL3_GPIO_PIN GPIO_Pin_11 //col3的引脚
-#define COL4_GPIO_PIN GPIO_Pin_12 //col4的引脚
+#define COL1_GPIO_PORT GPIOC //col1的端口
+#define COL2_GPIO_PORT GPIOC //col2的端口
+#define COL3_GPIO_PORT GPIOC //col3的端口
+#define COL4_GPIO_PORT GPIOC //col4的端口
+#define COL1_GPIO_PIN GPIO_Pin_0 //col1的引脚
+#define COL2_GPIO_PIN GPIO_Pin_1 //col2的引脚
+#define COL3_GPIO_PIN GPIO_Pin_2 //col3的引脚
+#define COL4_GPIO_PIN GPIO_Pin_3 //col4的引脚
 
 //时钟使能函数
 #define GPIO_CLK_ENABLE() \
 	do{   \
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE); \
-		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE); \
-		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD,ENABLE);  \
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE); \
 	}while(0);
 
 struct Matrix_port_pin
@@ -100,7 +99,7 @@ void Matrix_keyboard_init(void)
  * @return 按键的数字1-16
  *
  */
-uint8_t Matrix_get_number(void)
+uint8_t Matrix_number_check(void)
 {
 	uint8_t key_num = 0;
 	for(uint8_t row = 0;row < 4;row++)
@@ -114,30 +113,7 @@ uint8_t Matrix_get_number(void)
 		{
 			if(COL_R(COL_port_pin[col]) == 1)
 			{
-				Delay_ms(5);
-				if(COL_R(COL_port_pin[col]) != 1)
-				{
-					continue;
-				}
-				int16_t timeout = 200;
-				while(COL_R(COL_port_pin[col]) == 1)
-				{
-					Delay_ms(1);
-					timeout--;
-					if(timeout <= 0)
-					{
-						break;
-					}
-					//Send_printf("timeout=%d",timeout);
-				}
-				if(COL_R(COL_port_pin[col]) == 1)
-				{
-					ROW_W(ROW_port_pin[row],0); //退出函数前恢复原状
-					return 0;
-				}
-				Delay_ms(5);
 				key_num = row * 4 + col + 1;
-				//Send_printf("row=%d,col=%d",row,col);
 				ROW_W(ROW_port_pin[row],0); //退出函数前恢复原状
 				return key_num;
 			}
@@ -148,6 +124,51 @@ uint8_t Matrix_get_number(void)
 }
 
 
+// 消抖+获取数字
+uint8_t Matrix_keyboard_get_number(void)
+{
+	static uint8_t status;
+	static uint8_t pre_num = 0;
+	static uint8_t cur_num = 0;
+	static uint32_t start_t;
+	static uint8_t candidate;
+	pre_num = cur_num; //更新上次的键值
+	cur_num = Matrix_number_check(); //获取本次的键值
+	switch(status)
+	{
+		case 0:
+			if(pre_num == cur_num && pre_num != 0)
+			{
+				status = 1;
+				start_t = SysTick_GetTick(); //记录按下的时间
+			}
+			break;
+		case 1: //消抖状态
+			if(pre_num == cur_num)
+			{
+				if((SysTick_GetTick() - start_t) > 20) //消抖20ms
+				{
+					candidate = cur_num; //缓存键值
+					status = 2;
+				}
+			}else // 不一致,视为噪声
+			{
+				status = 0;
+			}
+			break;
+		case 2:
+			if(pre_num == cur_num && pre_num != 0)
+			{
+				//等待松手
+			}else
+			{
+				status = 0;
+				return candidate; //松手后返回这次的键值
+			}
+			break;
+	}
+	return 0;
+}
 
 
 
