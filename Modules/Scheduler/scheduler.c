@@ -1,5 +1,5 @@
 #include "stm32f10x.h"
-#include "time.h"
+#include "my_time.h"
 #include <stdint.h>
 #include "my_usart.h"
 #include "stepmotor.h"
@@ -16,11 +16,21 @@
 #include "DHT11.h"
 #include "PWM.h"
 #include "Motor.h"
+#include "SPI.h"
+#include "W25Q128.h"
+#include "RTC_clk.h"
+
+uint8_t MID;							//定义用于存放MID号的变量
+uint16_t DID;							//定义用于存放DID号的变量
+
+uint8_t ArrayWrite[] = {0x01, 0x02, 0x03, 0x04};	//定义要写入数据的测试数组
+uint8_t ArrayRead[7];								//定义要读取数据的测试数组
 
 #define TASK_NUM 7
 // 1ms执行一次
 static void Loop_1000hz(void)
 {
+	APP_data_update(); //信息采集
 	Stepmotor_Rhythm_1ms(); // 步进电机
 	LDR_ADC_Read_1ms(); //光敏ADC采样读取
 }
@@ -42,20 +52,22 @@ static void Loop_50hz(void)
 {
 	APP(20); //APP业务
 	Buzzer_alarm(20); //蜂鸣器报警
-	APP_data_update();
-	APP_control();
+	APP_control(); //手动控制
 }
 
 // 500ms执行一次
 static void Loop_2hz(void)
 {
-	//Send_printf("main running...\r\n");
-//	Send_printf("hum=%d\r\n",DHT11_getdata().humidity);
+	Send_printf("main running...\r\n");
+	Send_printf("time=%d %d %d %d %d %d\r\n",My_RTC_time[0],My_RTC_time[1],My_RTC_time[2],My_RTC_time[3],My_RTC_time[4],My_RTC_time[5]);
+//	W25Q128_ReadData(PASSWORD_ADDRESS,ArrayRead,7);
+//	Send_printf("%c%c%c%c%c%c\r\n",ArrayRead[0],ArrayRead[1],ArrayRead[2],ArrayRead[3],ArrayRead[4],ArrayRead[5]);
 }
 
 // 1s执行一次
 static void Loop_1hz(void)
 {
+	My_RTC_readtime();
 	DHT11_update_data();//DHT11数据读取,这是阻塞式的,25ms左右
 }
 
@@ -130,6 +142,10 @@ void Hardware_init(void)
 	AD_init(); //AD转换初始化
 	Motor_init();//直流电机初始化
 	STEPMOTOR_Init(); //步进电机初始化
+	W25Q128_Init(); //FLASH初始化
+	RTC_clk_init(); //RTC初始化
+//	W25Q128_SectorErase(PASSWORD_ADDRESS);
+//	W25Q128_PageProgram(PASSWORD_ADDRESS,"123456",7);
 	APP_init(); //开机动画
 	
 //	Send_printf("start=%d\r\n",SysTick_GetTick());

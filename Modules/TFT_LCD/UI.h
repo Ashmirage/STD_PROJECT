@@ -16,6 +16,7 @@ void APP_show_info(void);
 // 手动控制的函数
 void APP_control(void);
 
+
 #endif  
 	 
 	 

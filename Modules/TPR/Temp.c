@@ -1,18 +1,21 @@
 #include "stm32f10x.h"
 #include "AD.h"
+#include "my_usart.h"
 #include <math.h>
-
+#define TEMP_VS      (3.3f)
+#define R_FIXED_OHM  (10000.0f)
 // 计算电阻
 float Temp_get_r(void)
 {
-	float Vout = AD_Value[0] * 3.3f / 4095.0f;
+	float Vout = AD_Value[0] * TEMP_VS / 4095.0f;
 
-    if (Vout <= 0.01f) // 限幅
-        Vout = 0.01f;
-    if (Vout >= 3.29f)
-        Vout = 3.29f;
 
-    return 10000.0f * Vout / (3.3f - Vout); //计算电阻
+    // 限幅，避免除0/负数
+    if (Vout < 0.01f) Vout = 0.01f;
+    if (Vout > (TEMP_VS - 0.01f)) Vout = (TEMP_VS - 0.01f);
+
+    // 正确公式：Rntc = Rfixed * Vout / (Vs - Vout)
+    return R_FIXED_OHM * Vout / (TEMP_VS - Vout);
 }
 
 

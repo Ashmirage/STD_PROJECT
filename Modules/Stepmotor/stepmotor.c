@@ -1,5 +1,6 @@
 #include "stm32f10x.h"
-#include "time.h"
+#include "my_time.h"
+#include "my_usart.h"
 
 // 定义4个控制IN的IO端口
 #define STEPMOTOR_A_GPIO_PORT GPIOD
@@ -85,10 +86,10 @@ typedef struct
 
 static Stepmotor stepmotor_st;
 
-static float curtain = 0;//窗帘状态
+static volatile uint16_t	curtain = 0;//窗帘状态
 
 // 获取当前状态
-float Stepmotor_get_curtain_status(void)
+uint16_t Stepmotor_get_curtain_status(void)
 {
 	return curtain;
 }
@@ -205,11 +206,13 @@ void Stepmotor_angle_dir(uint8_t dir,u16 angle,uint16_t interval_ms)
 	}
 	if(dir == 0)
 	{
-		curtain += angle / 90.0 * 25;
+		curtain = curtain + angle / 90 * 25;
 	}else
 	{
-		curtain -= angle / 90.0 * 25;
+		curtain = curtain - angle / 90 * 25;
 	}
+	if(curtain < 0){curtain=0;}
+	if(curtain > 100){curtain=100;}
 	stepmotor_st.dir = dir; //设置方向
 	stepmotor_st.remain_phrases = 64*angle/45*8; //计算步数
 	stepmotor_st.Rhythm_index = 0; //初始化状态
@@ -226,6 +229,46 @@ void Stepmotor_angle_dir(uint8_t dir,u16 angle,uint16_t interval_ms)
 uint8_t Stepmotor_is_run(void)
 {
 	return stepmotor_st.is_busy;
+}
+
+// 自动根据光照调整窗帘的函数
+void Stepmotor_light_control(uint16_t light)
+{
+	
+	if(light < 250)//第一档
+	{
+		if(curtain != 0)
+		{
+			Stepmotor_angle_dir(1,curtain / 25 * 90,1); //反方向转
+		}
+	}else if(light < 500)
+	{
+		if(curtain < 25)
+		{
+			Stepmotor_angle_dir(0,90,1); //正方向转
+		}else if(curtain > 25)
+		{
+			Stepmotor_angle_dir(1,(curtain-25) / 25 * 90,1); //反方向转
+		}
+	}else if(light < 750)
+	{
+		if(curtain < 50)
+		{
+			Stepmotor_angle_dir(0,(50 - curtain) / 25 * 90,1); //正方向转
+		}else if(curtain > 50)
+		{
+			Stepmotor_angle_dir(1,(curtain-50) / 25 * 90,1); //反方向转
+		}
+	}else
+	{
+		if(curtain < 75)
+		{
+			Stepmotor_angle_dir(0,(75 - curtain) / 25 * 90,1); //正方向转
+		}else if(curtain > 75)
+		{
+			Stepmotor_angle_dir(1,(curtain-75) / 25 * 90,1); //反方向转
+		}
+	}
 }
 
 // 单相模式

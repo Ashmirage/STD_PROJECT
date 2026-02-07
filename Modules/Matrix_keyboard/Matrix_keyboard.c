@@ -1,5 +1,5 @@
 #include "stm32f10x.h"
-#include "time.h"
+#include "my_time.h"
 #include "my_usart.h"
 #include <stdio.h>
 

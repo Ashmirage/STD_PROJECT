@@ -1,7 +1,7 @@
 #include "stm32f10x.h"
 #include <stdlib.h>
 #include "PWM.h"
-#include "time.h"
+#include "my_time.h"
 
 #define MOTOR_AIN_PORT GPIOC
 #define MOTOR_AIN1_PIN GPIO_Pin_13

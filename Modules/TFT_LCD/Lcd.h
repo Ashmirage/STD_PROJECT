@@ -2,6 +2,7 @@
 #define __LCD_H		
 #include "stm32f10x.h"
 #include <stdint.h>
+#include "chinese_font.h"  // 引入索引枚举定义
 //////////////////////////////////////////////////////////////////////////////////	 
 
 //2.4寸/2.8寸/3.5寸/4.3寸/7寸 TFT液晶驱动	  
@@ -173,7 +174,33 @@ void LCD_WriteRAM(uint16_t RGB_Code);
 void LCD_SSD_BackLightSet(u8 pwm);							//SSD1963 背光控制
 void LCD_Scan_Dir(u8 dir);									//设置屏扫描方向
 void LCD_Display_Dir(u8 dir);								//设置屏幕显示方向
-void LCD_Set_Window(uint16_t sx,uint16_t sy,uint16_t width,uint16_t height);	//设置窗口					   						   																			 
+void LCD_Set_Window(uint16_t sx,uint16_t sy,uint16_t width,uint16_t height);	//设置窗口	
+
+//------------------------------------------------
+// ...existing code...
+//新增的显示中文的代码
+// ...existing code...
+
+
+// ========== 中文显示函数（索引式） ==========
+// ...existing code...
+
+// ========== 中文显示函数（索引式） ==========
+void LCD_ShowChinese16(u16 x, u16 y, ChineseIndex_16x16 index, u8 mode);
+void LCD_ShowChineseString16(u16 x, u16 y, const ChineseIndex_16x16 *index_array, u8 mode);
+
+// ...existing code...
+void LCD_ShowChinese24(u16 x, u16 y, ChineseIndex_16x16 index, u8 mode);
+void LCD_ShowChineseString24(u16 x, u16 y, const ChineseIndex_16x16 *index_array, u8 mode);
+
+// ...existing code...
+// ...existing code...
+
+
+// ...existing code...
+//-------------------------------------------------
+
+
 //LCD分辨率设置
 #define SSD_HOR_RESOLUTION		800		//LCD水平分辨率
 #define SSD_VER_RESOLUTION		480		//LCD垂直分辨率

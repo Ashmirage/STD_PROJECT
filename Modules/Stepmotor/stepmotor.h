@@ -15,7 +15,9 @@ uint8_t Stepmotor_is_run(void);
 
 void STEPMOTOR_Init(void);
 
-float Stepmotor_get_curtain_status(void);
+uint16_t Stepmotor_get_curtain_status(void);
+
+void Stepmotor_light_control(uint16_t light);
 
 //void STEPMOTOR_Rhythm_4_1_4(u8 step,u8 dly);
 //void STEPMOTOR_Direction(u8 dir,u8 num,u8 dly);

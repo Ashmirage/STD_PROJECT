@@ -6,6 +6,7 @@ do{ \
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOF, ENABLE); \
 }while(0);
 
+
 #define ADC_CHANNEL1_PORT GPIOC
 #define ADC_CHANNEL1_PIN  GPIO_Pin_5
 #define ADC_CHANNEL1_NAME ADC_Channel_15

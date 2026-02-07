@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_HD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS\CM3\CoreSupport;..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\..\Common;..\usart_printf;..\..\Modules\Usart;..\..\Modules\Stepmotor;..\..\Modules\TFT_LCD;..\..\Modules\Relay;..\..\Modules\AD;..\..\Modules\TPR;..\..\Modules\Time;..\..\Modules\Scheduler;..\..\Modules\Matrix_keyboard;..\..\Modules\LED;..\..\Modules\Buzzer;..\..\Modules\TIM;..\..\Modules\LDR;..\..\Modules\DHT11;..\..\Modules\PWM;..\..\Modules\Motor</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS\CM3\CoreSupport;..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\..\Common;..\usart_printf;..\..\Modules\Usart;..\..\Modules\Stepmotor;..\..\Modules\TFT_LCD;..\..\Modules\Relay;..\..\Modules\AD;..\..\Modules\TPR;..\..\Modules\Time;..\..\Modules\Scheduler;..\..\Modules\Matrix_keyboard;..\..\Modules\LED;..\..\Modules\Buzzer;..\..\Modules\TIM;..\..\Modules\LDR;..\..\Modules\DHT11;..\..\Modules\PWM;..\..\Modules\Motor;..\..\Modules\SPI;..\..\Modules\W25Q128;..\..\Modules\RTC_CLK</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -625,16 +625,6 @@
               <FilePath>..\..\Modules\TPR\Temp.h</FilePath>
             </File>
             <File>
-              <FileName>time.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Modules\Time\time.c</FilePath>
-            </File>
-            <File>
-              <FileName>time.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Modules\Time\time.h</FilePath>
-            </File>
-            <File>
               <FileName>scheduler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Modules\Scheduler\scheduler.c</FilePath>
@@ -733,6 +723,61 @@
               <FileName>Motor.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Modules\Motor\Motor.h</FilePath>
+            </File>
+            <File>
+              <FileName>SPI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\SPI\SPI.c</FilePath>
+            </File>
+            <File>
+              <FileName>SPI.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\SPI\SPI.h</FilePath>
+            </File>
+            <File>
+              <FileName>W25Q128.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\W25Q128\W25Q128.c</FilePath>
+            </File>
+            <File>
+              <FileName>W25Q128.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\W25Q128\W25Q128.h</FilePath>
+            </File>
+            <File>
+              <FileName>W25Q128_Ins.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\W25Q128\W25Q128_Ins.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTC_clk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\RTC_CLK\RTC_clk.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTC_clk.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\RTC_CLK\RTC_clk.h</FilePath>
+            </File>
+            <File>
+              <FileName>my_time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\Time\my_time.c</FilePath>
+            </File>
+            <File>
+              <FileName>my_time.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\Time\my_time.h</FilePath>
+            </File>
+            <File>
+              <FileName>chinese_font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Modules\TFT_LCD\chinese_font.c</FilePath>
+            </File>
+            <File>
+              <FileName>chinese_font.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Modules\TFT_LCD\chinese_font.h</FilePath>
             </File>
           </Files>
         </Group>

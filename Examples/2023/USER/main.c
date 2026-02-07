@@ -24,13 +24,14 @@
 #include <stdio.h>
 #include <string.h>
 #include "my_usart.h"
-#include "time.h"
+#include "my_time.h"
 #include "stepmotor.h"
 #include "Lcd.h"
 #include "Relay.h"
 #include "AD.h"
 #include "Temp.h"
 #include "Scheduler.h"
+#include "RTC_clk.h"
 
 
 #ifdef USE_STM32100B_EVAL

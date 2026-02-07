@@ -1,6 +1,6 @@
 #include "stm32f10x.h"
 #include "AD.h"
-#include "time.h"
+#include "my_time.h"
 #include <math.h>
 
 #define LDR_READ_TIMES	10  //光照传感器ADC循环读取次数

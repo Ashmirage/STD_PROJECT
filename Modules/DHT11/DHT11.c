@@ -1,7 +1,8 @@
 #include "stm32f10x.h"
-#include "time.h"
+#include "my_time.h"
 #include "DHT11.h"
 #include "my_usart.h"
+#include "Stepmotor.h"
 
 #define DHT11_GPIO_CLK_FUNCTION()  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
 #define DHT11_GPIO_PORT GPIOC
@@ -134,6 +135,11 @@ volatile struct DHT11_data dht11_data;
 // 任务调度器里面1s执行一次
 void DHT11_update_data(void)
 {
+	// 当步进电机运行时, 直接结束
+	if(Stepmotor_is_run() == 1)
+	{
+		return;
+	}
 	dht11_data = DHT11_read_data(); //读取一次数据
 }
 

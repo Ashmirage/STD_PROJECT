@@ -1,8 +1,10 @@
 #include "Lcd.h"
 #include "stdlib.h"
 #include "font.h"  
-#include "time.h"	
+#include "my_time.h"	
 #include "my_usart.h"
+#include "chinese_font.h"
+#include "Lcd.h"
 //////////////////////////////////////////////////////////////////////////////////	 
 
 //2.4寸/2.8寸/3.5寸/4.3寸/7寸 TFT液晶驱动	  
@@ -3014,10 +3016,139 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p)
     }  
 }
 
+// 新增内容
+//--------------------------------
+// ...existing code...
 
+// ...existing code...
 
+/**
+ * @brief  显示单个16x16中文（通过索引）
+ * @param  x,y: 起始坐标
+ * @param  index: 汉字索引（ChineseIndex_16x16枚举）
+ * @param  mode: 0=非叠加，1=叠加
+ */
+void LCD_ShowChinese16(u16 x, u16 y, ChineseIndex_16x16 index, u8 mode)
+{
+    u16 i, j;
+    u8 temp, bit_mask;
+    u16 base_index;
+    
+    // 边界检查
+    if(index >= ZH_COUNT) return;
+    
+    // 每个汉字占用2行数据，所以基础索引 = index * 2
+    base_index = index * 2;
+    
+    // 绘制16x16点阵
+    for(j = 0; j < 16; j++)  // 16行
+    {
+        u8 row_index = (j < 8) ? 0 : 1;  // 前8行用第一行数据，后8行用第二行数据
+        u8 byte_offset = (j < 8) ? j * 2 : (j - 8) * 2;  // 每行占2字节
+        
+        for(i = 0; i < 16; i++)  // 每行16像素
+        {
+            u8 byte_idx = byte_offset + (i / 8);
+            temp = chinese_fonts_16x16[base_index + row_index][byte_idx];
+            bit_mask = 0x80 >> (i % 8);
+            
+            if(temp & bit_mask)
+            {
+                LCD_Fast_DrawPoint(x + i, y + j, POINT_COLOR);
+            }
+            else if(mode == 0)
+            {
+                LCD_Fast_DrawPoint(x + i, y + j, BACK_COLOR);
+            }
+        }
+    }
+}
 
+/**
+ * @brief  显示中文字符串（通过索引数组）
+ * @param  x,y: 起始坐标
+ * @param  index_array: 索引数组，以ZH_COUNT结尾
+ * @param  mode: 0=非叠加，1=叠加
+ * @note   示例：ChineseIndex_16x16 str[] = {ZH_WEN, ZH_DU, ZH_COUNT};
+ */
+void LCD_ShowChineseString16(u16 x, u16 y, const ChineseIndex_16x16 *index_array, u8 mode)
+{
+    u16 cx = x;
+    u16 i = 0;
+    
+    while(index_array[i] != ZH_COUNT && index_array[i] < ZH_COUNT)
+    {
+        LCD_ShowChinese16(cx, y, index_array[i], mode);
+        cx += 16;  // 一个汉字宽16像素
+        i++;
+        
+        // 防止超出屏幕
+        if(cx + 16 > lcddev.width) break;
+    }
+}
 
+static uint8_t Font24_GetByte(const typFNT_GB24_C51 *g, uint8_t idx)
+{
+    if (idx < 16) return g->b0[idx];
+    idx -= 16;
+    if (idx < 16) return g->b1[idx];
+    idx -= 16;
+    if (idx < 16) return g->b2[idx];
+    idx -= 16;
+    if (idx < 16) return g->b3[idx];
+    idx -= 16;
+    if (idx < 8)  return g->b4[idx];
+    return 0;
+}
+
+/**
+ * @brief  显示单个24x24中文（逐行式，顺向，阴码常用）
+ * @param  x,y: 起始坐标
+ * @param  index: 汉字索引（0..ZH_COUNT-1）
+ * @param  mode: 0=非叠加(写背景)，1=叠加(不写背景)
+ */
+void LCD_ShowChinese24(u16 x, u16 y, ChineseIndex_16x16 index, u8 mode)
+{
+    u16 i, j;
+
+    if (index >= ZH_COUNT) return;
+
+    const typFNT_GB24_C51 *g = &chinese_fonts_24x24[index];
+
+    for (j = 0; j < 24; j++)
+    {
+        for (i = 0; i < 24; i++)
+        {
+            uint8_t byte = Font24_GetByte(g, (uint8_t)(j * 3 + (i / 8)));
+            uint8_t mask = (uint8_t)(0x80u >> (i % 8));
+
+            if (byte & mask)
+            {
+                LCD_Fast_DrawPoint(x + i, y + j, POINT_COLOR);
+            }
+            else if (mode == 0)
+            {
+                LCD_Fast_DrawPoint(x + i, y + j, BACK_COLOR);
+            }
+        }
+    }
+}
+
+void LCD_ShowChineseString24(u16 x, u16 y, const ChineseIndex_16x16 *index_array, u8 mode)
+{
+    u16 cx = x;
+    u16 i = 0;
+
+    while (i < 32 && index_array[i] != ZH_COUNT && index_array[i] < ZH_COUNT)
+    {
+        LCD_ShowChinese24(cx, y, index_array[i], mode);
+        cx += 24;
+        i++;
+
+        if (cx + 24 > lcddev.width) break;
+    }
+}
+// ...existing code...
 
 
 
